@@ -24,6 +24,15 @@ def score(data, model):
     return (len(y_pred) - correct) / len(y_pred)
 
 
+def get_model():
+    model = Sequential()
+    model.add(Dense(30, input_shape=(4,), activation='relu'))
+    model.add(Dense(10, activation='relu'))
+    model.add(Dense(5, activation='relu'))
+    model.add(Dense(3, activation='softmax'))
+    return model
+
+
 def update_weights(model):
     old_weights = model.get_weights()
 
@@ -83,20 +92,18 @@ y_onehot = onehot_encoder.fit_transform(reshaped)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y_onehot, test_size=0.20)
 
-model = Sequential()
-model.add(Dense(30, input_shape=(4,), activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(5, activation='relu'))
-model.add(Dense(3, activation='softmax'))
+model = get_model()
 
 start_time = time.time()
 simpleSA(1, 0.99, (x_train, y_train), model)
-print(score((x_test, y_test), model))
+print("loss: ", score((x_test, y_test), model))
 print("--- %s seconds ---" % (time.time() - start_time))
+
+model_back = get_model()
 
 start_time = time.time()
 opt = Adam(lr=0.04)
-model.compile(opt, 'categorical_crossentropy', ['accuracy'])
-model.fit(x_train, y_train, epochs=100)
-print(score((x_test, y_test), model))
+model_back.compile(opt, 'categorical_crossentropy', ['accuracy'])
+model_back.fit(x_train, y_train, epochs=100)
+print("loss: ", score((x_test, y_test), model_back))
 print("--- %s seconds ---" % (time.time() - start_time))
