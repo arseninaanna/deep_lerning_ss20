@@ -57,8 +57,8 @@ def acceptance_ratio(cost, new_cost, temperature):
     return p_new / p
 
 
-def simpleSA(T, rate, path, distances, dict):
-    cost = score(path, dict, distances)
+def simpleSA(T, rate, path, distances, idx_dict):
+    cost = score(path, idx_dict, distances)
 
     cost_record = 0
     iter = 0
@@ -72,7 +72,7 @@ def simpleSA(T, rate, path, distances, dict):
 
         old_path = path.copy()
         path = update_path(path)
-        new_cost = score(path, dict, distances)
+        new_cost = score(path, idx_dict, distances)
 
         alpha = acceptance_ratio(cost, new_cost, T)
         u = np.random.uniform(0, 1, 1)[0]
